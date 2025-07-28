@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CHAMA MD PAIR CODE</title>
+<style>
+  /* Canvas full screen */
+  #matrix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0ff; /* cyan text */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 320px;
+    background: rgba(0,0,0,0.85);
+    padding: 20px 25px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  h3, h6 {
+    margin: 10px 0 15px 0;
+    color: #0ff;
+  }
+
+  .input-container {
+    display: flex;
+    gap: 8px;
+  }
+
+  input {
+    flex-grow: 1;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px 0 0 8px;
+    border: none;
+    outline: none;
+    background: #002b2b;
+    color: #0ff;
+  }
+  input::placeholder {
+    color: #099;
+  }
+
+  button {
+    padding: 12px;
+    font-weight: bold;
+    background: #00cccc;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    color: black;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #00ffcc;
+  }
+
+  #waiting-message {
+    margin-top: 15px;
+    color: #0ff;
+    display: none;
+    font-weight: bold;
+  }
+
+  #pair {
+    margin-top: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #f00;
+  }
+
+  #copy {
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+  <h3>Link with phone number</h3>
+  <h6>⚙ Enter your number with country code ⚙</h6>
+  <div class="input-container">
+    <input type="number" id="number" placeholder="+94xxxxxxxxx" autocomplete="off" />
+    <button id="submit">Enter</button>
+  </div>
+  <div id="waiting-message">In process...</div>
+  <div id="pair"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+<script>
+  // Matrix rain animation
+  const canvas = document.getElementById("matrix");
+  const ctx = canvas.getContext("2d");
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const chars = "한カ文中요핫사빵슘스愛愛文中日漢한국";
+  const fontSize = 16;
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = new Array(columns).fill(1);
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0ff";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars.charAt(Math.floor(Math.random() * chars.length));
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  setInterval(draw, 50);
+
+  // Main logic
+  const pairDiv = document.getElementById("pair");
+  const submitBtn = document.getElementById("submit");
+  const numberInput = document.getElementById("number");
+  const waitingMsg = document.getElementById("waiting-message");
+
+  async function copyCode() {
+    const copyElem = document.getElementById("copy");
+    if (!copyElem) return;
+    const text = copyElem.innerText.replace("CODE: ", "");
+    try {
+      await navigator.clipboard.writeText(text);
+      copyElem.innerText = "COPIED ✅";
+      setTimeout(() => {
+        copyElem.innerText = "CODE: " + text;
+      }, 1000);
+    } catch {
+      alert("Failed to copy!");
+    }
+  }
+
+  submitBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    pairDiv.innerHTML = "";
+    if (!numberInput.value) {
+      pairDiv.innerHTML = '<div style="color:#0ff;">❗ Enter your WhatsApp number with country code.</div>';
+      return;
+    }
+    const digitsOnly = numberInput.value.replace(/\D/g, "");
+    if (digitsOnly.length < 11) {
+      pairDiv.innerHTML = '<div style="color:#0ff;">❌ Invalid number format ❌</div>';
+      return;
+    }
+    waitingMsg.style.display = "block";
+
+    try {
+      const res = await axios.get(`/code?number=${digitsOnly}`);
+      const code = res.data.code || "Service Unavailable";
+      pairDiv.innerHTML = `<div id="copy" style="color:#f00; cursor:pointer;" onclick="copyCode()">CODE: <span style="color:#0ff;">${code}</span></div>`;
+    } catch (err) {
+      pairDiv.innerHTML = '<div style="color:#f00;">❌ Error fetching code.</div>';
+    }
+    waitingMsg.style.display = "none";
+  });
+</script>
+
+</body>
+</html>

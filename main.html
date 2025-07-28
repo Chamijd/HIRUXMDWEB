@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HIRU X MD</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <style>
+    :root {
+      --primary: #6a11cb;
+      --secondary: #50c9c3;
+      --accent: #ff6b6b;
+      --text-light: #ffffff;
+      --text-dark: #0a1929;
+      --bg-light: rgba(255, 255, 255, 0.15);
+      --bg-dark: rgba(10, 25, 41, 0.85);
+      --gradient-1: #6a11cb;
+      --gradient-2: #2575fc;
+      --gradient-3: #50c9c3;
+      --gradient-4: #96deda;
+      --card-bg: rgba(26, 26, 46, 0.8);
+      --card-border: rgba(80, 201, 195, 0.6);
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    @keyframes float {
+      0% {transform: translateY(0px);}
+      50% {transform: translateY(-15px);}
+      100% {transform: translateY(0px);}
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(270deg, var(--gradient-1), var(--gradient-2), var(--gradient-3), var(--gradient-4));
+      background-size: 800% 800%;
+      animation: gradientShift 30s ease infinite;
+      color: var(--text-light);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+      transition: all 0.5s ease;
+    }
+
+    body.dark-mode {
+      --primary: #8a2be2;
+      --secondary: #5ce1e6;
+      --accent: #ff8e8e;
+      --gradient-1: #4b0082;
+      --gradient-2: #1e40af;
+      --gradient-3: #0891b2;
+      --gradient-4: #5ce1e6;
+      --card-bg: rgba(15, 15, 35, 0.9);
+      --card-border: rgba(92, 225, 230, 0.7);
+    }
+
+    body.light-mode {
+      --primary: #7c3aed;
+      --secondary: #0d9488;
+      --accent: #ef4444;
+      --gradient-1: #c084fc;
+      --gradient-2: #60a5fa;
+      --gradient-3: #2dd4bf;
+      --gradient-4: #a5f3fc;
+      --card-bg: rgba(255, 255, 255, 0.25);
+      --card-border: rgba(13, 148, 136, 0.7);
+      --text-light: #0a1929;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      background: transparent;
+    }
+
+    .loading-screen {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: var(--secondary);
+      font-weight: 700;
+      font-size: 1.3rem;
+      text-shadow: 0 0 8px var(--secondary);
+      transition: all 0.5s ease;
+    }
+
+    .loader {
+      border: 8px solid rgba(255, 255, 255, 0.2);
+      border-top: 8px solid var(--secondary);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite, pulse 2s ease infinite;
+      margin-bottom: 16px;
+      box-shadow: 0 0 15px var(--secondary);
+    }
+
+    @keyframes spin {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
+    }
+
+    @keyframes pulse {
+      0% {box-shadow: 0 0 15px var(--secondary);}
+      50% {box-shadow: 0 0 30px var(--secondary);}
+      100% {box-shadow: 0 0 15px var(--secondary);}
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 25px;
+      text-align: center;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
+    .container.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+      text-shadow: 0 0 20px var(--secondary);
+      font-weight: 900;
+      animation: float 4s ease-in-out infinite;
+      background: linear-gradient(45deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+    }
+
+    .system-info {
+      background: var(--card-bg);
+      border: 1.8px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px 30px;
+      margin-bottom: 2rem;
+      text-align: left;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(80, 201, 195, 0.3);
+      color: var(--text-light);
+      font-weight: 600;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      transition: all 0.3s ease;
+    }
+
+    .system-info:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px var(--secondary);
+    }
+
+    .info {
+      margin: 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-light);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+
+    .info i {
+      color: var(--secondary);
+      font-size: 1.4rem;
+      text-shadow: 0 0 8px var(--secondary);
+      flex-shrink: 0;
+    }
+
+    #battery-info {
+      font-weight: 700;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .button {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: var(--text-light);
+      padding: 16px 28px;
+      font-size: 1.2rem;
+      border-radius: 14px;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 0 20px rgba(106, 17, 203, 0.3);
+      transition: all 0.25s ease;
+      user-select: none;
+      cursor: pointer;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+      );
+      transform: rotate(30deg);
+      transition: all 0.5s ease;
+    }
+
+    .button:hover::before {
+      transform: translateX(100%) rotate(30deg);
+    }
+
+    .button i {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+      color: inherit;
+      text-shadow: none;
+    }
+
+    .button:hover {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: var(--text-light);
+      box-shadow: 0 0 28px var(--accent);
+      transform: scale(1.08);
+      border-color: var(--text-light);
+    }
+
+    .button:hover i {
+      transform: rotate(15deg);
+      color: var(--text-light);
+      text-shadow: 0 0 10px var(--text-light);
+    }
+
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: var(--card-bg);
+      border: 1.8px solid var(--card-border);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 15px var(--secondary);
+      transition: all 0.3s ease;
+    }
+
+    .mode-toggle:hover {
+      transform: rotate(30deg) scale(1.1);
+    }
+
+    .mode-toggle i {
+      color: var(--secondary);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .login-progress {
+      width: 80%;
+      max-width: 300px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .button {
+        padding: 14px 22px;
+        font-size: 1rem;
+      }
+      
+      .system-info {
+        padding: 18px 22px;
+      }
+    }
+  </style>
+</head>
+<body onload="startLoading()">
+  <div id="particles-js"></div>
+
+  <div class="loading-screen" id="loading-screen">
+    <div class="loader"></div>
+    <span id="loading-text">Initializing HIRU X MD ...</span>
+    <div class="login-progress">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <div class="mode-toggle" id="mode-toggle" title="Toggle Dark/Light Mode">
+    <i class="fas fa-moon" id="mode-icon"></i>
+  </div>
+
+  <div class="container" id="main-content">
+    <h1>HIRU X MD </h1>
+
+    <div class="system-info" aria-live="polite" aria-atomic="true">
+      <div class="info" id="ip-info">
+        <i class="fas fa-network-wired"></i> IP Address: Loading...
+      </div>
+      <div class="info" id="time-info">
+        <i class="fas fa-clock"></i> Time: Loading...
+      </div>
+      <div class="info" id="weather-info">
+        <i class="fas fa-cloud-sun"></i> Weather: Loading...
+      </div>
+      <div class="info" id="battery-info">
+        <i class="fas fa-battery-half"></i> Battery Level: Loading...
+      </div>
+    </div>
+
+    <div class="button-container" role="navigation" aria-label="Main system actions">
+      <a href="/pair" class="button" title="Pair Code">
+        <i class="fas fa-link" aria-hidden="true"></i> Pair Code
+      </a>
+     
+      <a href="https://github.com/hirun/HIRUN-X-MD/fork" target="_blank" rel="noopener noreferrer" class="button" title="Bot Fork on GitHub">
+        <i class="fas fa-code-branch" aria-hidden="true"></i> Bot Fork
+      </a>
+    <a href="https://wa.me/+94702529242?text=HI%20HURU%20X%20MD%20OWNER" class="button help-btn"><i class="help-branch"></i>Help</a>
+   </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script>
+    // Mode toggle functionality
+    const modeToggle = document.getElementById('mode-toggle');
+    const modeIcon = document.getElementById('mode-icon');
+    const body = document.body;
+    
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+    let lightMode = localStorage.getItem('lightMode') === 'true';
+    
+    function applyMode() {
+      if (lightMode) {
+        body.classList.add('light-mode');
+        body.classList.remove('dark-mode');
+        modeIcon.classList.remove('fa-sun');
+        modeIcon.classList.add('fa-moon');
+      } else if (darkMode) {
+        body.classList.add('dark-mode');
+        body.classList.remove('light-mode');
+        modeIcon.classList.remove('fa-moon');
+        modeIcon.classList.add('fa-sun');
+      } else {
+        // Default mode (follow system preference)
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          body.classList.add('dark-mode');
+          modeIcon.classList.add('fa-sun');
+          modeIcon.classList.remove('fa-moon');
+        } else {
+          body.classList.remove('dark-mode');
+          modeIcon.classList.remove('fa-sun');
+          modeIcon.classList.add('fa-moon');
+        }
+      }
+    }
+    
+    modeToggle.addEventListener('click', () => {
+      if (body.classList.contains('light-mode')) {
+        // Currently in light mode, switch to dark
+        lightMode = false;
+        darkMode = true;
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        modeIcon.classList.remove('fa-moon');
+        modeIcon.classList.add('fa-sun');
+      } else if (body.classList.contains('dark-mode')) {
+        // Currently in dark mode, switch to default
+        darkMode = false;
+        lightMode = false;
+        body.classList.remove('dark-mode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          body.classList.add('dark-mode');
+          modeIcon.classList.add('fa-sun');
+        } else {
+          modeIcon.classList.add('fa-moon');
+        }
+      } else {
+        // Currently in default mode, switch to light
+        lightMode = true;
+        darkMode = false;
+        body.classList.add('light-mode');
+        modeIcon.classList.remove('fa-sun');
+        modeIcon.classList.add('fa-moon');
+      }
+      
+      localStorage.setItem('darkMode', darkMode);
+      localStorage.setItem('lightMode', lightMode);
+    });
+    
+    // Apply mode on load
+    applyMode();
+
+    function startLoading() {
+      const loadingText = document.getElementById('loading-text');
+      const progressBar = document.getElementById('progress-bar');
+      const steps = [
+        {text: "Loading core modules...", progress: 20},
+        {text: "Initializing security protocols...", progress: 40},
+        {text: "Establishing network connections...", progress: 60},
+        {text: "Preparing user interface...", progress: 80},
+        {text: "System ready!", progress: 100}
+      ];
+      
+      let currentStep = 0;
+      
+      const updateStep = () => {
+        if (currentStep < steps.length) {
+          loadingText.textContent = steps[currentStep].text;
+          progressBar.style.width = steps[currentStep].progress + '%';
+          currentStep++;
+          setTimeout(updateStep, 800);
+        } else {
+          document.getElementById('loading-screen').style.opacity = 0;
+          setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').classList.add('loaded');
+            updateIPAndTime();
+            updateWeather();
+            updateBattery();
+            
+            // Start time updates
+            setInterval(updateTime, 1000);
+          }, 500);
+        }
+      };
+      
+      updateStep();
+    }
+
+    function updateIPAndTime() {
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('ip-info').innerHTML = `<i class="fas fa-network-wired"></i> IP Address: ${data.ip}`;
+        })
+        .catch(() => {
+          document.getElementById('ip-info').innerHTML = '<i class="fas fa-network-wired"></i> IP Address: Unavailable';
+        });
+
+      updateTime();
+    }
+    
+    function updateTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString();
+      const dateStr = now.toLocaleDateString(undefined, { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      document.getElementById('time-info').innerHTML = `<i class="fas fa-clock"></i> ${timeStr} • ${dateStr}`;
+    }
+
+    function updateWeather() {
+      if (!navigator.geolocation) {
+        document.getElementById('weather-info').innerHTML = '<i class="fas fa-cloud-sun"></i> Weather: Geolocation not supported';
+        return;
+      }
+      
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          fetch(`https://api.weatherapi.com/v1/current.json?key=4d673b437b5b4e92952155513242605&q=${lat},${lon}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data?.current) {
+                const cond = data.current.condition.text;
+                const temp = data.current.temp_c;
+                const icon = getWeatherIcon(data.current.condition.code);
+                document.getElementById('weather-info').innerHTML = `${icon} Weather: ${cond}, ${temp}°C`;
+              } else {
+                document.getElementById('weather-info').innerHTML = '<i class="fas fa-cloud-sun"></i> Weather: Unavailable';
+              }
+            })
+            .catch(() => {
+              document.getElementById('weather-info').innerHTML = '<i class="fas fa-cloud-sun"></i> Weather: Unavailable';
+            });
+        },
+        () => {
+          document.getElementById('weather-info').innerHTML = '<i class="fas fa-cloud-sun"></i> Weather: Location permission denied';
+        }
+      );
+    }
+    
+    function getWeatherIcon(code) {
+      // Simplified weather icon mapping
+      if (code >= 1000 && code <= 1030) {
+        return '<i class="fas fa-sun" style="color:var(--secondary);"></i>';
+      } else if (code >= 1063 && code <= 1087) {
+        return '<i class="fas fa-cloud-rain" style="color:var(--secondary);"></i>';
+      } else if (code >= 1114 && code <= 1117) {
+        return '<i class="fas fa-snowflake" style="color:var(--secondary);"></i>';
+      } else if (code >= 1135 && code <= 1147) {
+        return '<i class="fas fa-smog" style="color:var(--secondary);"></i>';
+      } else {
+        return '<i class="fas fa-cloud-sun" style="color:var(--secondary);"></i>';
+      }
+    }
+
+    async function updateBattery() {
+      if (!navigator.getBattery) {
+        document.getElementById('battery-info').innerHTML = '<i class="fas fa-battery-half"></i> Battery info not supported';
+        return;
+      }
+      try {
+        const battery = await navigator.getBattery();
+        const levelPercent = Math.round(battery.level * 100);
+        const batteryIcon = getBatteryIcon(levelPercent);
+        document.getElementById('battery-info').innerHTML = batteryIcon + ` Battery Level: ${levelPercent}%`;
+        document.getElementById('battery-info').innerHTML += battery.charging ? 
+          ' <i class="fas fa-bolt" style="color:var(--accent);"></i>' : '';
+
+        battery.addEventListener('levelchange', () => {
+          const lvl = Math.round(battery.level * 100);
+          document.getElementById('battery-info').innerHTML = getBatteryIcon(lvl) + ` Battery Level: ${lvl}%`;
+          document.getElementById('battery-info').innerHTML += battery.charging ? 
+            ' <i class="fas fa-bolt" style="color:var(--accent);"></i>' : '';
+        });
+        
+        battery.addEventListener('chargingchange', () => {
+          const lvl = Math.round(battery.level * 100);
+          document.getElementById('battery-info').innerHTML = getBatteryIcon(lvl) + ` Battery Level: ${lvl}%`;
+          document.getElementById('battery-info').innerHTML += battery.charging ? 
+            ' <i class="fas fa-bolt" style="color:var(--accent);"></i>' : '';
+        });
+      } catch {
+        document.getElementById('battery-info').innerHTML = '<i class="fas fa-battery-half"></i> Battery info not available';
+      }
+    }
+
+    function getBatteryIcon(level) {
+      if(level >= 80) return '<i class="fas fa-battery-full" style="color:var(--secondary);"></i>';
+      if(level >= 60) return '<i class="fas fa-battery-three-quarters" style="color:var(--secondary);"></i>';
+      if(level >= 40) return '<i class="fas fa-battery-half" style="color:var(--secondary);"></i>';
+      if(level >= 20) return '<i class="fas fa-battery-quarter" style="color:var(--secondary);"></i>';
+      return '<i class="fas fa-battery-empty" style="color:var(--secondary);"></i>';
+    }
+
+    /* Particles.js config for colors matching the gradient and theme */
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 130, density: { enable: true, value_area: 900 } },
+        color: { value: ["var(--primary)", "var(--secondary)", "var(--accent)"] },
+        shape: {
+          type: "circle",
+          stroke: { width: 0, color: "#000000" },
+        },
+        opacity: {
+          value: 0.7,
+          random: true,
+          anim: { enable: true, speed: 1, opacity_min: 0.3, sync: false },
+        },
+        size: {
+          value: 5,
+          random: true,
+          anim: { enable: true, speed: 5, size_min: 2, sync: false },
+        },
+        line_linked: {
+          enable: true,
+          distance: 130,
+          color: "var(--primary)",
+          opacity: 0.3,
+          width: 1,
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "out",
+          bounce: false,
+          attract: { enable: false, rotateX: 600, rotateY: 1200 },
+        },
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: false },
+          resize: true,
+        },
+        modes: {
+          repulse: { distance: 130, duration: 0.4 },
+        },
+      },
+      retina_detect: true,
+    });
+  </script>
+</body>
+</html>
