@@ -99,13 +99,13 @@ router.get('/', async (req, res) => {
                         let code = await sock.sendMessage(sock.user.id, { text: md });
 
                         // Send disclaimer message
-                        let desc = `> ශෙයා කරන්න එපා \n\n> ᴅᴏ ɴᴏᴛ ꜱʜᴇʀᴇ ᴛʜɪꜱ \n\n> இதை யாரிடமும் பகிர வேண்டாம்\n\n\n\n> ᴘᴏᴡᴇʀᴅ ʙʏ 𝗵𝗶𝗿𝘂𝗻`;
+                        let desc = `*┏━━━━━━━━━━━━━━*\n*┇❄️┋☛HIRU-X-MD SESSION*\n*┇❄️┋☛SUCCESSFULLY*\n*┇❄️┋☛CONNECTED*\n*┗━━━━━━━━━━━━━━━*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❶ ┋ Creator ☞ Mr HIRUN VIKASITHA👨🏻‍💻*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❷ ┋ WhatsApp Channel ☞ https://whatsapp.com/channel/0029VbAtADv0LKZFPYOW4M2f*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n┇❄️❸ ┋ *Owner ☞ https://wa.me/+94702529242*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❺ ┋ You Tube =https://www.youtube.com/@Hv.music.official-q2e*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n\n> *❄️𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ⓜⓡ 𝑯𝑰𝑹𝑼𝑵 𝑽𝑰𝑲𝑨𝑺𝑰𝑻𝑯𝑨*`;
 
                         await sock.sendMessage(sock.user.id, {
                             text: desc,
                             contextInfo: {
                                 externalAdReply: {
-                                    title: "ᴄʜᴀᴍᴀ-ᴍᴅ",
+                                    title: "𝙷𝙸𝚁𝚄 𝚇 𝙼𝙳",
                                     thumbnailUrl: "https://i.ibb.co/Gf4knTt9/4542.jpg",
                                     sourceUrl: "https://whatsapp.com/channel/0029VbAtADv0LKZFPYOW4M2f",
                                     mediaType: 1,
@@ -117,13 +117,13 @@ router.get('/', async (req, res) => {
                     } catch (e) {
                         // Send error message
                         let ddd = sock.sendMessage(sock.user.id, { text: e.toString() });
-                        let desc = `> ශෙයා කරන්න එපා \n\n> ᴅᴏ ɴᴏᴛ ꜱʜᴇʀᴇ ᴛʜɪꜱ \n\n> இதை யாரிடமும் பகிர வேண்டாம்\n\n\n\n> ᴘᴏᴡᴇʀᴅ ʙʏ 𝗵𝗶𝗿𝘂𝗻`;
+                        let desc = `*┏━━━━━━━━━━━━━━*\n*┇❄️┋☛HIRU-X-MD SESSION*\n*┇❄️┋☛SUCCESSFULLY*\n*┇❄️┋☛CONNECTED*\n*┗━━━━━━━━━━━━━━━*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❶ ┋ Creator ☞ Mr HIRUN VIKASITHA👨🏻‍💻*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❷ ┋ WhatsApp Channel ☞ https://whatsapp.com/channel/0029VbAtADv0LKZFPYOW4M2f*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n┇❄️❸ ┋ *Owner ☞ https://wa.me/+94702529242*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n*┇❄️❺ ┋ You Tube =https://www.youtube.com/@Hv.music.official-q2e*\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n\n> *❄️𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : ⓜⓡ 𝑯𝑰𝑹𝑼𝑵 𝑽𝑰𝑲𝑨𝑺𝑰𝑻𝑯𝑨*`;
 
                         await sock.sendMessage(sock.user.id, {
                             text: desc,
                             contextInfo: {
                                 externalAdReply: {
-                                    title: "ᴄʜᴀᴍᴀ-ᴍᴅ",
+                                    title: "𝙷𝙸𝚁𝚄 𝚇 𝙼𝙳",
                                     thumbnailUrl: "https://i.ibb.co/Gf4knTt9/4542.jpg",
                                     sourceUrl: "https://whatsapp.com/channel/0029VbAtADv0LKZFPYOW4M2f",
                                     mediaType: 2,
